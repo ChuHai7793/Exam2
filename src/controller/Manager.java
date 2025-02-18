@@ -1,10 +1,12 @@
 package controller;
 
 import model.BankAccount;
+import model.NotFoundBankAccountException;
 import model.PayAccount;
 import model.SavingAccount;
 import storage.ReadFileCSV;
 import storage.WriteFileCSV;
+import validate.Validate;
 //import storage.WriteFileCSV;
 
 import java.util.List;
@@ -40,14 +42,40 @@ public class Manager {
         int accountID = accountsList.get(accountsList.size() - 1).getAccountID()+1;
         System.out.println("Enter account code:");
         String code = scanner.nextLine();
+        while(!Validate.validateNotEmptyString(code)) {
+            System.out.println("Enter account code:");
+            code = scanner.nextLine();
+        }
+
+
         System.out.println("Enter account owner name: ");
         String owner = scanner.nextLine();
+        while(!Validate.validateNotEmptyString(owner)) {
+            System.out.println("Enter account owner name: ");
+            owner = scanner.nextLine();
+        }
+
         System.out.println("Enter date created: ");
         String date = scanner.nextLine();
+        while(!Validate.validateNotEmptyString(date)||!Validate.validateDate(date)) {
+            System.out.println("Enter date created: ");
+            date = scanner.nextLine();
+        }
+
+
         System.out.println("Enter cart No: ");
         String cardNo = scanner.nextLine();
+        while(!Validate.validateNotEmptyString(cardNo)) {
+            System.out.println("Enter cart No: ");
+            cardNo = scanner.nextLine();
+        }
+
         System.out.println("Enter balance: ");
         double balance = scanner.nextDouble();
+        while(!Validate.validatePositiveDouble(balance)) {
+            System.out.println("Enter balance: ");
+            balance = scanner.nextDouble();
+        }
 
         BankAccount payAccount = new PayAccount(accountID, code, owner,date, cardNo,balance);
         addAccount(payAccount);
@@ -57,18 +85,50 @@ public class Manager {
         int accountID = accountsList.get(accountsList.size() - 1).getAccountID()+1;
         System.out.println("Enter account code:");
         String code = scanner.nextLine();
+        while(!Validate.validateNotEmptyString(code)) {
+            System.out.println("Enter account code:");
+            code = scanner.nextLine();
+        }
+
+
         System.out.println("Enter account owner name: ");
         String owner = scanner.nextLine();
+        while(!Validate.validateNotEmptyString(owner)) {
+            System.out.println("Enter account owner name: ");
+            owner = scanner.nextLine();
+        }
+
         System.out.println("Enter date created: ");
         String date = scanner.nextLine();
+        while(!Validate.validateNotEmptyString(date)||!Validate.validateDate(date)) {
+            System.out.println("Enter date created: ");
+            date = scanner.nextLine();
+        }
+
         System.out.println("Enter amount: ");
         double amount = scanner.nextDouble();
+        while(!Validate.validatePositiveDouble(amount)) {
+            System.out.println("Enter amount: ");
+            amount = scanner.nextDouble();
+        }
+
         System.out.println("Enter deposit date: ");
         String depositDate = scanner.nextLine();
+        while(!Validate.validateNotEmptyString(depositDate)) {
+            System.out.println("Enter deposit date: ");
+            depositDate = scanner.nextLine();
+        }
+
         System.out.println("Enter due date: ");
         String dueDate = scanner.nextLine();
+        while(!Validate.validateNotEmptyString(dueDate)) {
+            System.out.println("Enter due date: ");
+            dueDate = scanner.nextLine();
+        }
+
         System.out.println("Enter interest date: ");
         double balance = scanner.nextDouble();
+
 
         BankAccount savingAccount = new SavingAccount(accountID, code, owner,date,
                 amount,depositDate,dueDate,balance);
@@ -86,7 +146,7 @@ public class Manager {
         return isExist;
 
     }
-    public void removeAccount(Scanner scanner) {
+    public void removeAccount(Scanner scanner) throws NotFoundBankAccountException {
         System.out.println("Enter account code:");
         String accountCode = scanner.nextLine();
 
@@ -94,15 +154,16 @@ public class Manager {
             System.out.println("Do you want to delete this account? (Y/N):");
             String choice = scanner.nextLine();
 
-            if (choice.equals("Yes")) {
+
+            if (choice.equals("Y")) {
                 for (BankAccount account : accountsList) {
                     if (account.getAccountCode().equals(accountCode)) {
                         accountsList.remove(account);
                     }
                 }
-            } else if(choice.equals("No")) {
-
-            } else {}
+            }
+        } else{
+            throw new NotFoundBankAccountException("Account not exist");
         }
 
         WriteFileCSV.writeToFile( accountsList);

@@ -2,6 +2,7 @@ package view;
 
 import controller.Manager;
 import model.BankAccount;
+import model.NotFoundBankAccountException;
 
 import java.util.List;
 import java.util.Scanner;
@@ -33,7 +34,7 @@ public class Menu {
                         addAccount(scanner, manager);
                         break;
                     case 2:
-//                        removeAccount(scanner, manager);
+                        removeAccount(scanner, manager);
                         break;
 
                     case 3:
@@ -86,7 +87,7 @@ public class Menu {
         }
     }
 
-    public static void removeAccount(Scanner scanner, Manager manager) {
+    public static void removeAccount(Scanner scanner, Manager manager) throws NotFoundBankAccountException {
         manager.removeAccount(scanner);
     }
 
